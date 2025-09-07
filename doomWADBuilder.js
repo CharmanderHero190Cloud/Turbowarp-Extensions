@@ -18,10 +18,11 @@
             return room.id;
         }
 
-        // Download WAD using data URL
+        // Download WAD using data URL (works in TurboWarp)
         downloadWAD(filename) {
             const wadData = JSON.stringify({ name: this.wadName, rooms: this.rooms }, null, 2);
-            const dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(wadData);
+            const dataUrl = 'data:text/json;charset=utf-8,' + encodeURIComponent(wadData);
+
             const link = document.createElement('a');
             link.href = dataUrl;
             link.download = filename || this.wadName + ".wad.json";
@@ -30,6 +31,7 @@
             document.body.removeChild(link);
         }
 
+        // Block definitions
         getInfo() {
             return {
                 id: 'doomWADBuilder',
@@ -66,6 +68,7 @@
         }
     }
 
+    // Register the extension with TurboWarp VM
     if (typeof window.vm !== 'undefined') {
         window.vm.extensionManager.register(new DoomWADBuilder(window.vm));
     } else {
