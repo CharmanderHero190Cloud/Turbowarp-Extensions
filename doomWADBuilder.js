@@ -18,14 +18,16 @@
             return room.id;
         }
 
-        // Download WAD
+        // Download WAD using data URL
         downloadWAD(filename) {
             const wadData = JSON.stringify({ name: this.wadName, rooms: this.rooms }, null, 2);
-            const blob = new Blob([wadData], { type: 'application/json' });
+            const dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(wadData);
             const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
+            link.href = dataUrl;
             link.download = filename || this.wadName + ".wad.json";
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
         }
 
         getInfo() {
@@ -65,7 +67,6 @@
     }
 
     if (typeof window.vm !== 'undefined') {
-        // TurboWarp / Scratch VM
         window.vm.extensionManager.register(new DoomWADBuilder(window.vm));
     } else {
         console.warn('TurboWarp VM not detected. Load this extension via URL inside TurboWarp.');
